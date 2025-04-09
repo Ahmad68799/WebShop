@@ -1,7 +1,7 @@
 <?php
 include '../private/connection.php';
 
-// Check if product_id is set in the URL
+// Check if product_id is set in the URL blabla
 if (isset($_GET['product_id'])) {
     $product_id = $_GET['product_id'];
     ?>
