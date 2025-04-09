@@ -36,7 +36,7 @@ foreach ($cart_items as $item) {
 
 // Display the shopping cart
 echo '<div class="cart-container">';
-echo '<form action="PHP/shopingcart.php" method="post">';
+echo '<form id="cart-form" action="PHP/shopingcartdelete.php" method="post">';
 echo '<div class="cart-items">';
 foreach ($cart_items as $item) {
     echo '
@@ -45,21 +45,41 @@ foreach ($cart_items as $item) {
             <div class="item-info">
                 <h3>' . htmlspecialchars($item['name']) . '</h3>
                 <p class="price">€' . number_format($item['price'], 2) . '</p>
+                 <input type="hidden" name="product_id" value="' . $item['product_id'] . '">
                 <label for="quantity_' . $item['product_id'] . '">Amount:</label>
-                <input type="number" name="quantity[' . $item['product_id'] . ']" value="' . htmlspecialchars($item['quantity']) . '" min="1">
+                <input type="number" name="quantity[' . $item['product_id'] . ']" value="' . htmlspecialchars($item['quantity']) . '" min="1" onchange="updateCart(this, ' . $item['product_id'] . ')">
                 <button type="submit" name="remove" value="' . $item['product_id'] . '" class="remove-btn">Delete</button>
             </div>
         </div>
     ';
 }
 echo '</div>
-      <div class="checkout-box" style="float: left; margin-right: 20px;">
+      <div class="checkout-box">
           <h3>Total Price: €' . number_format($total_price, 2) . '</h3>
-          <input type="submit" value="Update Cart" class="update-cart-btn">
+          <form action="../checkout.php" method="post">
+              <input type="submit" value="Checkout" class="checkout-btn">
+          </form>
       </div>
     </form>
-    <form action="../checkout.php" method="post">
-        <input type="submit" value="Checkout" class="checkout-btn">
-    </form>
     </div>';
+
+echo '<script>
+function updateCart(element, productId) {
+    var form = document.getElementById("cart-form");
+    var productIdInput = document.createElement("input");
+    productIdInput.type = "hidden";
+    productIdInput.name = "product_id";
+    productIdInput.value = productId;
+
+    var quantityInput = document.createElement("input");
+    quantityInput.type = "hidden";
+    quantityInput.name = "quantity";
+    quantityInput.value = element.value;
+
+    form.appendChild(productIdInput);
+    form.appendChild(quantityInput);
+
+    form.submit();
+}
+</script>';
 ?>
