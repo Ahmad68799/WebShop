@@ -6,6 +6,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $product_id = $_POST['product_id'];
     $quantity = $_POST['quantity'];
 
+    if ($quantity < 1) {
+        $_SESSION['alert'] = 'quantity must be a positive !';
+        header('Location: ../index.php?page=shopingcart');
+        exit;
+    }
+
     if (isset($_SESSION['user_id'])) {
         // Insert or update quantity in the database
         $stmt = $pdo->prepare("INSERT INTO cart (user_id, product_id, quantity) VALUES (:user_id, :product_id, :quantity)
